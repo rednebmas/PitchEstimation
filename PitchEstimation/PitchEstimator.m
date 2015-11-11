@@ -13,6 +13,7 @@
 
 @property (nonatomic, readwrite) float loudness;
 @property (nonatomic, readwrite) float fundamentalFrequency;
+@property (nonatomic, readwrite) float binSize;
 
 @end
 
@@ -32,13 +33,15 @@
     // make the fft taller
     for (int i = 0; i < size; i++)
     {
-        fftData[i] *= 20.0;
+//        fftData[i] *= 10.0;
     }
     
     // estimate actual frequency from bin with max freq
     self.fundamentalFrequency = [PitchEstimator ratioEstimatedFrequencyOf:fft
                                                                    ofSize:size
                                                                   atIndex:[fft maxFrequencyIndex]];
+    // set df
+    self.binSize = [fft frequencyAtIndex:1] - [fft frequencyAtIndex:0];
 }
 
 #pragma mark - FFT

@@ -24,7 +24,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Frequency" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vJA-zR-xRr">
                                         <rect key="frame" x="12" y="28" width="576" height="26.5"/>
                                         <animations/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="22"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -64,7 +64,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="audioPlotFreq" destination="2fq-Tp-uX6" id="AOX-Nq-hsH"/>
+                        <outlet property="audioPlot" destination="2fq-Tp-uX6" id="YXV-AS-Ona"/>
                         <outlet property="maxFrequencyLabel" destination="vJA-zR-xRr" id="6S4-VF-3gI"/>
                     </connections>
                 </viewController>

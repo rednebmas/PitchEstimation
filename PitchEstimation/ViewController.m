@@ -22,11 +22,6 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
 }
 
 /**
- EZAudioPlot for time plot
- */
-@property (nonatomic,weak) IBOutlet EZAudioPlot *audioPlotTime;
-
-/**
  The microphone used to get input.
  */
 @property (nonatomic,strong) EZMicrophone *microphone;
@@ -39,7 +34,7 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
 @end
 
 
-static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
+static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
 
 @implementation ViewController
 
@@ -57,7 +52,7 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
     UITapGestureRecognizer *singleFingerTap =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(switchPlotType)];
-    [self.audioPlotFreq addGestureRecognizer:singleFingerTap];
+    [self.audioPlot addGestureRecognizer:singleFingerTap];
     
     //
     // Setup the AVAudioSession. EZMicrophone will not work properly on iOS
@@ -86,9 +81,9 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
     //
     // Setup frequency domain audio plot
     //
-    self.audioPlotFreq.shouldFill = YES;
-    self.audioPlotFreq.plotType = EZPlotTypeBuffer;
-    self.audioPlotFreq.shouldCenterYAxis = NO;
+    self.audioPlot.shouldFill = YES;
+    self.audioPlot.plotType = EZPlotTypeBuffer;
+    self.audioPlot.shouldCenterYAxis = NO;
     
     //
     // Create an instance of the microphone and tell it to use this view controller instance as the delegate
@@ -119,28 +114,28 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
 {
     if (audioPlotType == AudioPlotTypeFFT) // switch to no fill buffer
     {
-        self.audioPlotFreq.plotType = EZPlotTypeBuffer;
-        self.audioPlotFreq.shouldFill = NO;
-        self.audioPlotFreq.shouldCenterYAxis = YES;
-        self.audioPlotFreq.shouldMirror = NO;
+        self.audioPlot.plotType = EZPlotTypeBuffer;
+        self.audioPlot.shouldFill = NO;
+        self.audioPlot.shouldCenterYAxis = YES;
+        self.audioPlot.shouldMirror = NO;
         
         audioPlotType = AudioPlotTypeTimeNoFillBuffer;
     }
     else if (audioPlotType == AudioPlotTypeTimeNoFillBuffer) // switch to fill rolling
     {
-        self.audioPlotFreq.shouldFill = YES;
-        self.audioPlotFreq.plotType = EZPlotTypeRolling;
-        self.audioPlotFreq.shouldCenterYAxis = YES;
-        self.audioPlotFreq.shouldMirror = YES;
+        self.audioPlot.shouldFill = YES;
+        self.audioPlot.plotType = EZPlotTypeRolling;
+        self.audioPlot.shouldCenterYAxis = YES;
+        self.audioPlot.shouldMirror = YES;
         
         audioPlotType = AudioPlotTypeTimeFillRolling;
     }
     else // switch to fft
     {
-        self.audioPlotFreq.shouldFill = YES;
-        self.audioPlotFreq.plotType = EZPlotTypeBuffer;
-        self.audioPlotFreq.shouldCenterYAxis = NO;
-        self.audioPlotFreq.shouldMirror = NO;
+        self.audioPlot.shouldFill = YES;
+        self.audioPlot.plotType = EZPlotTypeBuffer;
+        self.audioPlot.shouldCenterYAxis = NO;
+        self.audioPlot.shouldMirror = NO;
         
         audioPlotType = AudioPlotTypeFFT;
     }
@@ -156,14 +151,6 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
  withNumberOfChannels:(UInt32)numberOfChannels
 {
     __weak typeof (self) weakSelf = self;
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        if (audioPlotType == AudioPlotTypeTimeFillRolling
-            || audioPlotType == AudioPlotTypeTimeNoFillBuffer)
-        {
-            [weakSelf.audioPlotFreq updateBuffer:buffer[0]
-                                  withBufferSize:bufferSize];
-        }
-    });
     
     // do some of our own processing
     [pitchEstimator processAudioBuffer:buffer ofSize:bufferSize];
@@ -173,6 +160,16 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
     //
     [self.fft computeFFTWithBuffer:buffer[0] withBufferSize:bufferSize];
 
+    // draw
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (audioPlotType == AudioPlotTypeTimeFillRolling
+            || audioPlotType == AudioPlotTypeTimeNoFillBuffer)
+        {
+            [weakSelf.audioPlot updateBuffer:buffer[0]
+                                  withBufferSize:bufferSize];
+        }
+    });
+    
 }
 
 //------------------------------------------------------------------------------
@@ -190,13 +187,12 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
     NSString *noteName = [EZAudioUtilities noteNameStringForFrequency:maxFrequency
                                                         includeOctave:YES];
     
-    
     __weak typeof (self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        weakSelf.maxFrequencyLabel.text = [NSString stringWithFormat:@"Highest Note: %@\nFrequency: %.2f\nLoudness: %.0f", noteName, maxFrequency, pitchEstimator.loudness];
+        weakSelf.maxFrequencyLabel.text = [NSString stringWithFormat:@"Highest Note: %@\nFrequency: %.2f\nEstimator diff: %.1f\nLoudness: %.0f\nBin size: %.0f", noteName, maxFrequency, fabsf(maxFrequency - [fft maxFrequency]), pitchEstimator.loudness, pitchEstimator.binSize];
         
         if (audioPlotType == AudioPlotTypeFFT) {
-            [weakSelf.audioPlotFreq updateBuffer:fftData withBufferSize:(UInt32)bufferSize/10];
+            [weakSelf.audioPlot updateBuffer:fftData withBufferSize:(UInt32)bufferSize/10];
         }
     });
 }

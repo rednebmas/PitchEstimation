@@ -12,6 +12,8 @@
 
 @property (nonatomic, readonly) float loudness;
 @property (nonatomic, readonly) float fundamentalFrequency;
+// delta frequency between bins
+@property (nonatomic, readonly) float binSize;
 
 + (float) loudness:(float**)buffer ofSize:(UInt32)size;
 
