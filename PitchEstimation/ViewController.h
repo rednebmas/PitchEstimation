@@ -7,9 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <EZAudio/EZAudio.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <EZMicrophoneDelegate, EZAudioFFTDelegate>
 
+/**
+ EZAudioPlot for frequency plot
+ */
+@property (nonatomic,weak) IBOutlet EZAudioPlot *audioPlotFreq;
+
+/**
+ A label used to display the maximum frequency (i.e. the frequency with the highest energy) calculated from the FFT.
+ */
+@property (nonatomic, weak) IBOutlet UILabel *maxFrequencyLabel;
 
 @end
 

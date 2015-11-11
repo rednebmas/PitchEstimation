@@ -13,9 +13,12 @@
 		2294E0A91BF2E60A0028A673 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2294E0A71BF2E60A0028A673 /* Main.storyboard */; };
 		2294E0AB1BF2E60A0028A673 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2294E0AA1BF2E60A0028A673 /* Assets.xcassets */; };
 		2294E0AE1BF2E60A0028A673 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2294E0AC1BF2E60A0028A673 /* LaunchScreen.storyboard */; };
+		2294E0B71BF2EA530028A673 /* PitchEstimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2294E0B61BF2EA530028A673 /* PitchEstimator.m */; };
+		D55C342457E658926111B8CF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 277EE69778CCF1885D3131C2 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1FA32C142B0307736501B36E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		2294E09B1BF2E60A0028A673 /* PitchEstimation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PitchEstimation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2294E09F1BF2E60A0028A673 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2294E0A11BF2E60A0028A673 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -26,6 +29,10 @@
 		2294E0AA1BF2E60A0028A673 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2294E0AD1BF2E60A0028A673 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2294E0AF1BF2E60A0028A673 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2294E0B51BF2EA530028A673 /* PitchEstimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PitchEstimator.h; sourceTree = "<group>"; };
+		2294E0B61BF2EA530028A673 /* PitchEstimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PitchEstimator.m; sourceTree = "<group>"; };
+		277EE69778CCF1885D3131C2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3B0D987E63960EE51C666C7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D55C342457E658926111B8CF /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +52,8 @@
 			children = (
 				2294E09D1BF2E60A0028A673 /* PitchEstimation */,
 				2294E09C1BF2E60A0028A673 /* Products */,
+				D94C7275655A708EA57AA15D /* Pods */,
+				E9D1901640C414A037F43CFC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +72,8 @@
 				2294E0A21BF2E60A0028A673 /* AppDelegate.m */,
 				2294E0A41BF2E60A0028A673 /* ViewController.h */,
 				2294E0A51BF2E60A0028A673 /* ViewController.m */,
+				2294E0B51BF2EA530028A673 /* PitchEstimator.h */,
+				2294E0B61BF2EA530028A673 /* PitchEstimator.m */,
 				2294E0A71BF2E60A0028A673 /* Main.storyboard */,
 				2294E0AA1BF2E60A0028A673 /* Assets.xcassets */,
 				2294E0AC1BF2E60A0028A673 /* LaunchScreen.storyboard */,
@@ -79,6 +91,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D94C7275655A708EA57AA15D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C3B0D987E63960EE51C666C7 /* Pods.debug.xcconfig */,
+				1FA32C142B0307736501B36E /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		E9D1901640C414A037F43CFC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				277EE69778CCF1885D3131C2 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -86,9 +115,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2294E0B21BF2E60A0028A673 /* Build configuration list for PBXNativeTarget "PitchEstimation" */;
 			buildPhases = (
+				08691F48A7F19A43BADD1F0B /* Check Pods Manifest.lock */,
 				2294E0971BF2E60A0028A673 /* Sources */,
 				2294E0981BF2E60A0028A673 /* Frameworks */,
 				2294E0991BF2E60A0028A673 /* Resources */,
+				E622BEC75AA4BA24D6086ABD /* Embed Pods Frameworks */,
+				BA6051B0DF10B7B3B3342B2F /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -144,6 +176,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		08691F48A7F19A43BADD1F0B /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		BA6051B0DF10B7B3B3342B2F /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E622BEC75AA4BA24D6086ABD /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		2294E0971BF2E60A0028A673 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -152,6 +232,7 @@
 				2294E0A61BF2E60A0028A673 /* ViewController.m in Sources */,
 				2294E0A31BF2E60A0028A673 /* AppDelegate.m in Sources */,
 				2294E0A01BF2E60A0028A673 /* main.m in Sources */,
+				2294E0B71BF2EA530028A673 /* PitchEstimator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +342,7 @@
 		};
 		2294E0B31BF2E60A0028A673 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C3B0D987E63960EE51C666C7 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PitchEstimation/Info.plist;
@@ -272,6 +354,7 @@
 		};
 		2294E0B41BF2E60A0028A673 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1FA32C142B0307736501B36E /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PitchEstimation/Info.plist;
@@ -300,6 +383,7 @@
 				2294E0B41BF2E60A0028A673 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
