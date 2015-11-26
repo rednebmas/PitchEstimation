@@ -23,6 +23,16 @@
 
 @implementation PitchEstimator
 
+- (id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.pitchEstimatorMethod = PitchEstimatorMethodQuadratic;
+    }
+    return self;
+}
+
 #pragma mark - Public methods
 
 - (void) processAudioBuffer:(float**)buffer ofSize:(UInt32)size
@@ -36,9 +46,22 @@
 {
     // estimate actual frequency from bin with max freq
     self.fundamentalFrequencyIndex = [self findFundamentalIndex:fft withBufferSize:size];
-    self.fundamentalFrequency = [PitchEstimator ratioEstimatedFrequencyOf:fft
-                                                                   ofSize:size
-                                                                  atIndex:self.fundamentalFrequencyIndex];
+    
+    if (self.pitchEstimatorMethod == PitchEstimatorMethodRatio)
+    {
+        self.fundamentalFrequency = [PitchEstimator
+                                     ratioEstimatedFrequencyOf:fft
+                                     ofSize:size
+                                     atIndex:self.fundamentalFrequencyIndex];
+    }
+    else if (self.pitchEstimatorMethod == PitchEstimatorMethodQuadratic)
+    {
+        self.fundamentalFrequency = [PitchEstimator
+                                     quadraticEstimatedFrequencyOf:fft
+                                     ofSize:size
+                                     atIndex:self.fundamentalFrequencyIndex];
+    }
+    
     // set df
     self.binSize = [fft frequencyAtIndex:1] - [fft frequencyAtIndex:0];
 }
@@ -64,6 +87,24 @@
     // ratio will be 1.0 if peak is in between bins
     float adjusted_ratio = (ratio - .5) * 2;
     float estimated = (adjusted_ratio) * (df * .5) + [fft frequencyAtIndex:index];
+    
+    return estimated;
+}
+
++ (float) quadraticEstimatedFrequencyOf:(EZAudioFFT*)fft ofSize:(vDSP_Length)size atIndex:(vDSP_Length)index
+{
+    if (index == 0)
+        return [fft frequencyAtIndex:0];
+    
+    float alpha = logf([fft frequencyMagnitudeAtIndex:index-1]);
+    float beta = logf([fft frequencyMagnitudeAtIndex:index]);
+    float gamma = logf([fft frequencyMagnitudeAtIndex:index+1]);
+    
+    // shoud be between -.5 and .5
+    float binDifference = .5 * ((alpha - gamma) / (alpha - 2 * beta + gamma));
+    
+    float binSize = [fft frequencyAtIndex:1] - [fft frequencyAtIndex:0];
+    float estimated = [fft frequencyAtIndex:index] + binSize * binDifference;
     
     return estimated;
 }

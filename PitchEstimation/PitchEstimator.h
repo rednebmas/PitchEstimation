@@ -8,8 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, PitchEstimatorMethod) {
+    PitchEstimatorMethodRatio,
+    PitchEstimatorMethodQuadratic
+};
+
 @interface PitchEstimator : NSObject
 
+@property (nonatomic) PitchEstimatorMethod pitchEstimatorMethod;
 @property (nonatomic, readonly) float loudness;
 @property (nonatomic, readonly) float fundamentalFrequency;
 @property (nonatomic, readonly) vDSP_Length fundamentalFrequencyIndex;

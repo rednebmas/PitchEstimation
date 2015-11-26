@@ -239,7 +239,7 @@ static float const FFTGain = 40.0;
     {
         debugString = [NSString
                        stringWithFormat:@"Note: %@\n"
-                                         "Frequency: %.2f\n"
+                                         "Frequency: %.0f\n"
                                          "Estimator diff: %.1f\n"
                                          "Loudness: %.0f\n"
                                          "Bin size: %.2f",
@@ -256,7 +256,7 @@ static float const FFTGain = 40.0;
         
         if (audioPlotType == AudioPlotTypeFFT) {
             UInt32 scaledBufferSize = (UInt32)(bufferSize/(fftAudioPlotScale*beingPinchedScale));
-            weakSelf.fftHighFrequencyLabel.text = [NSString stringWithFormat:@"%.1f hz", [fft frequencyAtIndex:scaledBufferSize]];
+            weakSelf.fftHighFrequencyLabel.text = [NSString stringWithFormat:@"%.1f Hz", [fft frequencyAtIndex:scaledBufferSize]];
             [weakSelf.audioPlot updateBuffer:fftData withBufferSize:scaledBufferSize];
         }
     });
