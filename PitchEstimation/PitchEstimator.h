@@ -11,12 +11,14 @@
 typedef NS_ENUM(NSInteger, PitchEstimatorWindowingMethod) {
     PitchEstimatorWindowingMethodHanning,
     PitchEstimatorWindowingMethodBlackmanHarris,
-    PitchEstimatorWindowingMethodGaussian
+    PitchEstimatorWindowingMethodGaussian,
+    PitchEstimatorWindowingMethodNone
 };
 
 typedef NS_ENUM(NSInteger, PitchEstimatorBinInterpolationMethod) {
     PitchEstimatorBinInterpolationMethodQuadratic,
-    PitchEstimatorBinInterpolationMethodGaussian
+    PitchEstimatorBinInterpolationMethodGaussian,
+    PitchEstimatorBinInterpolationMethodNone
 };
 
 @interface PitchEstimator : NSObject

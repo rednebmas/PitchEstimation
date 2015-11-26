@@ -37,24 +37,40 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gz5-4t-gXf">
-                                        <rect key="frame" x="12" y="67" width="212" height="29"/>
+                                        <rect key="frame" x="12" y="93" width="283" height="29"/>
                                         <animations/>
                                         <segments>
                                             <segment title="Hanning"/>
                                             <segment title="BHN"/>
                                             <segment title="Gaussian"/>
+                                            <segment title="None"/>
                                         </segments>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <action selector="windowValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="yD3-Jm-eHs"/>
                                         </connections>
                                     </segmentedControl>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Window function" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Olt-AH-yOL">
+                                        <rect key="frame" x="12" y="67" width="115.5" height="18"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bin Interpolation method" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Vm-ga-cCr">
+                                        <rect key="frame" x="12" y="129" width="169" height="18"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4ux-lB-HTo">
-                                        <rect key="frame" x="12" y="103" width="149" height="29"/>
+                                        <rect key="frame" x="12" y="155" width="224" height="29"/>
                                         <animations/>
                                         <segments>
                                             <segment title="Quadratic"/>
                                             <segment title="Gaussian"/>
+                                            <segment title="None"/>
                                         </segments>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
@@ -66,15 +82,21 @@
                                 <color key="backgroundColor" red="0.81176470590000005" green="0.25882352939999997" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="vJA-zR-xRr" secondAttribute="trailing" constant="12" id="4Kb-XY-ZCD"/>
+                                    <constraint firstItem="4ux-lB-HTo" firstAttribute="top" secondItem="9Vm-ga-cCr" secondAttribute="bottom" constant="8" id="BOQ-KI-xjZ"/>
                                     <constraint firstItem="4ux-lB-HTo" firstAttribute="top" secondItem="gz5-4t-gXf" secondAttribute="bottom" constant="8" id="E22-eF-hi1"/>
                                     <constraint firstItem="vJA-zR-xRr" firstAttribute="top" secondItem="2fq-Tp-uX6" secondAttribute="topMargin" constant="16" id="K3a-vG-o5w"/>
                                     <constraint firstItem="gz5-4t-gXf" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="LQl-N5-4AI"/>
+                                    <constraint firstItem="9Vm-ga-cCr" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="O6g-96-roo"/>
                                     <constraint firstItem="gz5-4t-gXf" firstAttribute="top" secondItem="vJA-zR-xRr" secondAttribute="bottom" constant="12.5" id="QZh-td-Ndd"/>
+                                    <constraint firstItem="Olt-AH-yOL" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="Qps-pJ-mpx"/>
                                     <constraint firstItem="vJA-zR-xRr" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="Zmh-gO-GWt"/>
                                     <constraint firstAttribute="bottom" secondItem="EZp-gS-g9G" secondAttribute="bottom" constant="8" id="c0Q-zw-Z0f"/>
                                     <constraint firstItem="4ux-lB-HTo" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="iRL-Fy-kfn"/>
+                                    <constraint firstItem="9Vm-ga-cCr" firstAttribute="top" secondItem="gz5-4t-gXf" secondAttribute="bottom" constant="8" id="lmR-v7-RjG"/>
                                     <constraint firstAttribute="trailing" secondItem="EZp-gS-g9G" secondAttribute="trailing" constant="12" id="mSl-wS-v56"/>
                                     <constraint firstItem="vJA-zR-xRr" firstAttribute="top" secondItem="2fq-Tp-uX6" secondAttribute="top" constant="24" id="mSz-SV-IZ7"/>
+                                    <constraint firstItem="Olt-AH-yOL" firstAttribute="top" secondItem="vJA-zR-xRr" secondAttribute="bottom" constant="12.5" id="rWR-8W-7um"/>
+                                    <constraint firstItem="gz5-4t-gXf" firstAttribute="top" secondItem="Olt-AH-yOL" secondAttribute="bottom" constant="8" id="t1S-SS-H1J"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
@@ -88,6 +110,8 @@
                                     <mask key="constraints">
                                         <exclude reference="K3a-vG-o5w"/>
                                         <exclude reference="mSz-SV-IZ7"/>
+                                        <exclude reference="QZh-td-Ndd"/>
+                                        <exclude reference="E22-eF-hi1"/>
                                     </mask>
                                 </variation>
                             </view>

@@ -49,7 +49,7 @@
     {
         [PitchEstimator blackmanHarris:buffer length:size];
     }
-    else
+    else if (self.windowingMethod == PitchEstimatorWindowingMethodGaussian)
     {
         [PitchEstimator gaussianWindow:buffer length:size];
     }
@@ -74,6 +74,10 @@
                                      gaussianEstimatedFrequencyOf:fft
                                      ofSize:size
                                      atIndex:self.fundamentalFrequencyIndex];
+    }
+    else
+    {
+        self.fundamentalFrequency = [fft frequencyAtIndex:self.fundamentalFrequencyIndex];
     }
     
     // set df
@@ -259,6 +263,10 @@
 //    float stdDeviation = [SBMath standardDeviationOf:buffer[0] ofSize:length];
 //    float stdDeviationSquared = stdDeviation * stdDeviation;
     
+    /*
+     * Method 1
+     *
+     
     float factor;
     float n;
     float lengthOverTwo = length / 2;
@@ -273,7 +281,20 @@
         int intI = (int)i;
         buffer[0][intI] = buffer[0][intI] * factor;
     }
+     */
+    
+    float factor;
+    float n;
+    float sigma = (length - 1) / (2 * 3);
+    float lengthOverTwo = length / 2;
+    for (float i = 0; i < length; i++)
+    {
+        n = i - lengthOverTwo;
+        factor = powf(M_E, (- (n * n)) / (2 * sigma * sigma));
+        
+        int intI = (int)i;
+        buffer[0][intI] = buffer[0][intI] * factor;
+    }
 }
-
 
 @end
