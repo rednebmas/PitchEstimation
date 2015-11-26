@@ -28,7 +28,8 @@
     self = [super init];
     if (self)
     {
-        self.pitchEstimatorMethod = PitchEstimatorMethodQuadratic;
+        self.binInterpolationMethod = PitchEstimatorBinInterpolationMethodQuadratic;
+        self.windowingMethod = PitchEstimatorWindowingMethodHanning;
     }
     return self;
 }
@@ -38,7 +39,15 @@
 - (void) processAudioBuffer:(float**)buffer ofSize:(UInt32)size
 {
     self.loudness = [PitchEstimator loudness:buffer ofSize:size];
-    [PitchEstimator hann:buffer length:size];
+    
+    if (self.windowingMethod == PitchEstimatorWindowingMethodHanning)
+    {
+        [PitchEstimator hann:buffer length:size];
+    }
+    else
+    {
+        [PitchEstimator blackmanHarris:buffer length:size];
+    }
 }
 
 
@@ -47,17 +56,17 @@
     // estimate actual frequency from bin with max freq
     self.fundamentalFrequencyIndex = [self findFundamentalIndex:fft withBufferSize:size];
     
-    if (self.pitchEstimatorMethod == PitchEstimatorMethodRatio)
-    {
-        self.fundamentalFrequency = [PitchEstimator
-                                     ratioEstimatedFrequencyOf:fft
-                                     ofSize:size
-                                     atIndex:self.fundamentalFrequencyIndex];
-    }
-    else if (self.pitchEstimatorMethod == PitchEstimatorMethodQuadratic)
+    if (self.binInterpolationMethod == PitchEstimatorBinInterpolationMethodQuadratic)
     {
         self.fundamentalFrequency = [PitchEstimator
                                      quadraticEstimatedFrequencyOf:fft
+                                     ofSize:size
+                                     atIndex:self.fundamentalFrequencyIndex];
+    }
+    else if (self.binInterpolationMethod == PitchEstimatorBinInterpolationMethodGaussian)
+    {
+        self.fundamentalFrequency = [PitchEstimator
+                                     gaussianEstimatedFrequencyOf:fft
                                      ofSize:size
                                      atIndex:self.fundamentalFrequencyIndex];
     }
@@ -68,6 +77,9 @@
 
 #pragma mark - FFT
 
+/**
+ * Something I came up with from playing with matlab... Doesn't work paticularly well
+ */
 + (float) ratioEstimatedFrequencyOf:(EZAudioFFT*)fft ofSize:(vDSP_Length)size atIndex:(vDSP_Length)index
 {
     vDSP_Length neighborIndex;
@@ -91,6 +103,10 @@
     return estimated;
 }
 
+/**
+ * More information can be found:
+ * https://ccrma.stanford.edu/~jos/sasp/Quadratic_Interpolation_Spectral_Peaks.html
+ */
 + (float) quadraticEstimatedFrequencyOf:(EZAudioFFT*)fft ofSize:(vDSP_Length)size atIndex:(vDSP_Length)index
 {
     if (index == 0)
@@ -102,6 +118,30 @@
     
     // shoud be between -.5 and .5
     float binDifference = .5 * ((alpha - gamma) / (alpha - 2 * beta + gamma));
+    
+    float binSize = [fft frequencyAtIndex:1] - [fft frequencyAtIndex:0];
+    float estimated = [fft frequencyAtIndex:index] + binSize * binDifference;
+    
+    return estimated;
+}
+
+/**
+ * More information can be found:
+ * https://mgasior.web.cern.ch/mgasior/pap/FFT_resol_note.pdf
+ */
++ (float) gaussianEstimatedFrequencyOf:(EZAudioFFT*)fft ofSize:(vDSP_Length)size atIndex:(vDSP_Length)index
+{
+    if (index == 0)
+        return [fft frequencyAtIndex:0];
+    
+    float alpha = [fft frequencyMagnitudeAtIndex:index-1];
+    float beta = [fft frequencyMagnitudeAtIndex:index];
+    float gamma = [fft frequencyMagnitudeAtIndex:index+1];
+    
+    // shoud be between -.5 and .5
+    float numerator = logf(gamma / alpha);
+    float denominator = 2.0 * logf((beta * beta) / (gamma * alpha));
+    float binDifference = numerator / denominator;
     
     float binSize = [fft frequencyAtIndex:1] - [fft frequencyAtIndex:0];
     float estimated = [fft frequencyAtIndex:index] + binSize * binDifference;
@@ -187,5 +227,27 @@
         buffer[0][(int)i] = buffer[0][(int)i] * factor;
     }
 }
+
++ (void) blackmanHarris:(float**)buffer length:(UInt32)length
+{
+    float factor = 0;
+    float a0 = 0.355768;
+    float a1 = 0.487396;
+    float a2 = 0.144232;
+    float a3 = 0.012604;
+    float lMinusOne = (float)length;
+    
+    for (float i = 0; i < length; i++)
+    {
+        float factor = a0
+                       - a1 * cosf(2 * M_PI * i / lMinusOne)
+                       + a2 * cosf(4 * M_PI * i / lMinusOne)
+                       - a3 * cosf(6 * M_PI * i / lMinusOne);
+        
+        int intI = (int)i;
+        buffer[0][intI] = buffer[0][intI] * factor;
+    }
+}
+
 
 @end

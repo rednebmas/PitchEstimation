@@ -35,7 +35,7 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
 
 @end
 
-static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
+static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
 static float const FFTGain = 40.0;
 
 @implementation ViewController
@@ -173,6 +173,16 @@ static float const FFTGain = 40.0;
     }
 }
 
+- (IBAction)windowValueChanged:(UISegmentedControl*)sender
+{
+    pitchEstimator.windowingMethod = sender.selectedSegmentIndex;
+}
+
+- (IBAction)binInterpolationMethodChanged:(UISegmentedControl *)sender
+{
+    pitchEstimator.binInterpolationMethod = sender.selectedSegmentIndex;
+}
+
 //------------------------------------------------------------------------------
 #pragma mark - EZMicrophoneDelegate
 //------------------------------------------------------------------------------
@@ -227,27 +237,23 @@ static float const FFTGain = 40.0;
                        stringWithFormat:@"Note: %@\n"
                                          "Frequency: %@\n"
                                          "Estimator diff: %@\n"
-                                         "Loudness: %.0f\n"
-                                         "Bin size: %.2f",
+                                         "Loudness: %.0f",
                        @"--",
                        @"--",
                        @"--",
-                       pitchEstimator.loudness,
-                       pitchEstimator.binSize];
+                       pitchEstimator.loudness];
     }
     else
     {
         debugString = [NSString
                        stringWithFormat:@"Note: %@\n"
-                                         "Frequency: %.0f\n"
+                                         "Frequency: %.2f\n"
                                          "Estimator diff: %.1f\n"
-                                         "Loudness: %.0f\n"
-                                         "Bin size: %.2f",
+                                         "Loudness: %.0f",
                        noteName,
                        fundamentalFrequency,
                        fabsf(fundamentalFrequency - [fft frequencyAtIndex:fundamentalFrequencyIndex]),
-                       pitchEstimator.loudness,
-                       pitchEstimator.binSize];
+                       pitchEstimator.loudness];
     }
     
     __weak typeof (self) weakSelf = self;
