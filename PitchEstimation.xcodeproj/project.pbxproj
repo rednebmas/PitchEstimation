@@ -14,6 +14,7 @@
 		2294E0AB1BF2E60A0028A673 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2294E0AA1BF2E60A0028A673 /* Assets.xcassets */; };
 		2294E0AE1BF2E60A0028A673 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2294E0AC1BF2E60A0028A673 /* LaunchScreen.storyboard */; };
 		2294E0B71BF2EA530028A673 /* PitchEstimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2294E0B61BF2EA530028A673 /* PitchEstimator.m */; };
+		2295C2A51C07ABE600A88A7C /* SBMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 2295C2A41C07ABE600A88A7C /* SBMath.m */; };
 		D55C342457E658926111B8CF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 277EE69778CCF1885D3131C2 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,8 @@
 		2294E0AF1BF2E60A0028A673 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2294E0B51BF2EA530028A673 /* PitchEstimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PitchEstimator.h; sourceTree = "<group>"; };
 		2294E0B61BF2EA530028A673 /* PitchEstimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PitchEstimator.m; sourceTree = "<group>"; };
+		2295C2A31C07ABE600A88A7C /* SBMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBMath.h; sourceTree = "<group>"; };
+		2295C2A41C07ABE600A88A7C /* SBMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBMath.m; sourceTree = "<group>"; };
 		277EE69778CCF1885D3131C2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3B0D987E63960EE51C666C7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,6 +82,8 @@
 				2294E0AC1BF2E60A0028A673 /* LaunchScreen.storyboard */,
 				2294E0AF1BF2E60A0028A673 /* Info.plist */,
 				2294E09E1BF2E60A0028A673 /* Supporting Files */,
+				2295C2A31C07ABE600A88A7C /* SBMath.h */,
+				2295C2A41C07ABE600A88A7C /* SBMath.m */,
 			);
 			path = PitchEstimation;
 			sourceTree = "<group>";
@@ -233,6 +238,7 @@
 				2294E0A31BF2E60A0028A673 /* AppDelegate.m in Sources */,
 				2294E0A01BF2E60A0028A673 /* main.m in Sources */,
 				2294E0B71BF2EA530028A673 /* PitchEstimator.m in Sources */,
+				2295C2A51C07ABE600A88A7C /* SBMath.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,7 +10,8 @@
 
 typedef NS_ENUM(NSInteger, PitchEstimatorWindowingMethod) {
     PitchEstimatorWindowingMethodHanning,
-    PitchEstimatorWindowingMethodBlackmanHarris
+    PitchEstimatorWindowingMethodBlackmanHarris,
+    PitchEstimatorWindowingMethodGaussian
 };
 
 typedef NS_ENUM(NSInteger, PitchEstimatorBinInterpolationMethod) {

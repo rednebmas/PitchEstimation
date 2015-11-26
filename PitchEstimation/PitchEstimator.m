@@ -8,6 +8,7 @@
 
 #import <EZAudio/EZAudio.h>
 #import "PitchEstimator.h"
+#import "SBMath.h"
 
 @interface PitchEstimator()
 {
@@ -44,9 +45,13 @@
     {
         [PitchEstimator hann:buffer length:size];
     }
-    else
+    else if (self.windowingMethod == PitchEstimatorWindowingMethodBlackmanHarris)
     {
         [PitchEstimator blackmanHarris:buffer length:size];
+    }
+    else
+    {
+        [PitchEstimator gaussianWindow:buffer length:size];
     }
 }
 
@@ -209,7 +214,7 @@
     {
         sumSquared += buffer[0][i]*buffer[0][i];
     }
-    double rms = sumSquared/bufferSize;
+    double rms = sumSquared/(double)bufferSize;
     double dBvalue = 20*log10(rms);
     
     return dBvalue;
@@ -239,10 +244,31 @@
     
     for (float i = 0; i < length; i++)
     {
-        float factor = a0
-                       - a1 * cosf(2 * M_PI * i / lMinusOne)
-                       + a2 * cosf(4 * M_PI * i / lMinusOne)
-                       - a3 * cosf(6 * M_PI * i / lMinusOne);
+        factor = a0
+                 - a1 * cosf(2 * M_PI * i / lMinusOne)
+                 + a2 * cosf(4 * M_PI * i / lMinusOne)
+                 - a3 * cosf(6 * M_PI * i / lMinusOne);
+        
+        int intI = (int)i;
+        buffer[0][intI] = buffer[0][intI] * factor;
+    }
+}
+
++ (void) gaussianWindow:(float**)buffer length:(UInt32)length
+{
+//    float stdDeviation = [SBMath standardDeviationOf:buffer[0] ofSize:length];
+//    float stdDeviationSquared = stdDeviation * stdDeviation;
+    
+    float factor;
+    float n;
+    float lengthOverTwo = length / 2;
+    float lengthMinusOneOverTwo = (length - 1) / 2;
+    float toSquare;
+    for (float i = 0; i < length; i++)
+    {
+        n = i - lengthOverTwo;
+        toSquare = 6 * n / lengthMinusOneOverTwo;
+        factor = powf(M_E, -.5 * toSquare * toSquare);
         
         int intI = (int)i;
         buffer[0][intI] = buffer[0][intI] * factor;
