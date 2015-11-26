@@ -12,6 +12,7 @@
 
 @property (nonatomic, readonly) float loudness;
 @property (nonatomic, readonly) float fundamentalFrequency;
+@property (nonatomic, readonly) vDSP_Length fundamentalFrequencyIndex;
 // delta frequency between bins
 @property (nonatomic, readonly) float binSize;
 

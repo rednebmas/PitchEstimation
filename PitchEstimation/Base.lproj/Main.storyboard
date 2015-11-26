@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -28,6 +28,13 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1200 Hz" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EZp-gS-g9G">
+                                        <rect key="frame" x="541" y="577.5" width="47" height="14.5"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" red="0.81176470590000005" green="0.25882352939999997" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -35,6 +42,8 @@
                                     <constraint firstAttribute="trailing" secondItem="vJA-zR-xRr" secondAttribute="trailing" constant="12" id="4Kb-XY-ZCD"/>
                                     <constraint firstItem="vJA-zR-xRr" firstAttribute="top" secondItem="2fq-Tp-uX6" secondAttribute="topMargin" constant="16" id="K3a-vG-o5w"/>
                                     <constraint firstItem="vJA-zR-xRr" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="Zmh-gO-GWt"/>
+                                    <constraint firstAttribute="bottom" secondItem="EZp-gS-g9G" secondAttribute="bottom" constant="8" id="c0Q-zw-Z0f"/>
+                                    <constraint firstAttribute="trailing" secondItem="EZp-gS-g9G" secondAttribute="trailing" constant="12" id="mSl-wS-v56"/>
                                     <constraint firstItem="vJA-zR-xRr" firstAttribute="top" secondItem="2fq-Tp-uX6" secondAttribute="top" constant="24" id="mSz-SV-IZ7"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -65,6 +74,7 @@
                     </view>
                     <connections>
                         <outlet property="audioPlot" destination="2fq-Tp-uX6" id="YXV-AS-Ona"/>
+                        <outlet property="fftHighFrequencyLabel" destination="EZp-gS-g9G" id="3OB-fW-cFh"/>
                         <outlet property="maxFrequencyLabel" destination="vJA-zR-xRr" id="6S4-VF-3gI"/>
                     </connections>
                 </viewController>

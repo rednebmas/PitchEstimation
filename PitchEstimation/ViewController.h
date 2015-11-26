@@ -21,5 +21,7 @@
  */
 @property (nonatomic, weak) IBOutlet UILabel *maxFrequencyLabel;
 
+@property (weak, nonatomic) IBOutlet UILabel *fftHighFrequencyLabel;
+
 @end
 

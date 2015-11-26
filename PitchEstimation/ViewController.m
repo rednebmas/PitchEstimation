@@ -19,6 +19,8 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
 {
     PitchEstimator *pitchEstimator;
     AudioPlotType audioPlotType;
+    float fftAudioPlotScale;
+    CGFloat beingPinchedScale;
 }
 
 /**
@@ -33,8 +35,8 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
 
 @end
 
-
-static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
+static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2 * 2;
+static float const FFTGain = 40.0;
 
 @implementation ViewController
 
@@ -84,6 +86,7 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
     self.audioPlot.shouldFill = YES;
     self.audioPlot.plotType = EZPlotTypeBuffer;
     self.audioPlot.shouldCenterYAxis = NO;
+    self.audioPlot.gain = FFTGain;
     
     //
     // Create an instance of the microphone and tell it to use this view controller instance as the delegate
@@ -101,6 +104,14 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
     // Start the mic
     //
     [self.microphone startFetchingAudio];
+    
+    //
+    // Pinch gesture recognizer for fft
+    //
+    fftAudioPlotScale = 10.0;
+    beingPinchedScale = 1.0;
+    UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinched:)];
+    [self.audioPlot addGestureRecognizer:pinchGestureRecognizer];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -118,6 +129,9 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
         self.audioPlot.shouldFill = NO;
         self.audioPlot.shouldCenterYAxis = YES;
         self.audioPlot.shouldMirror = NO;
+        self.audioPlot.gain = 1.0;
+        
+        self.fftHighFrequencyLabel.hidden = YES;
         
         audioPlotType = AudioPlotTypeTimeNoFillBuffer;
     }
@@ -127,6 +141,7 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
         self.audioPlot.plotType = EZPlotTypeRolling;
         self.audioPlot.shouldCenterYAxis = YES;
         self.audioPlot.shouldMirror = YES;
+        self.audioPlot.gain = 1.0;
         
         audioPlotType = AudioPlotTypeTimeFillRolling;
     }
@@ -136,8 +151,25 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
         self.audioPlot.plotType = EZPlotTypeBuffer;
         self.audioPlot.shouldCenterYAxis = NO;
         self.audioPlot.shouldMirror = NO;
+        self.audioPlot.gain = FFTGain;
+        [self.audioPlot clear];
+        
+        self.fftHighFrequencyLabel.hidden = NO;
         
         audioPlotType = AudioPlotTypeFFT;
+    }
+}
+
+- (void) pinched:(UIPinchGestureRecognizer*)pinchRecognizer
+{
+    if (pinchRecognizer.scale * fftAudioPlotScale < 1)
+        return;
+    
+    beingPinchedScale = pinchRecognizer.scale;
+    
+    if (pinchRecognizer.state == UIGestureRecognizerStateEnded) {
+        fftAudioPlotScale *= beingPinchedScale;
+        beingPinchedScale = 1.0;
     }
 }
 
@@ -183,16 +215,49 @@ static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
     // process
     [pitchEstimator processFFT:fft withFFTData:fftData ofSize:bufferSize];
     
-    float maxFrequency = pitchEstimator.fundamentalFrequency;
-    NSString *noteName = [EZAudioUtilities noteNameStringForFrequency:maxFrequency
+    float fundamentalFrequency = pitchEstimator.fundamentalFrequency;
+    vDSP_Length fundamentalFrequencyIndex = pitchEstimator.fundamentalFrequencyIndex;
+    NSString *noteName = [EZAudioUtilities noteNameStringForFrequency:fundamentalFrequency
                                                         includeOctave:YES];
+    // create debug string
+    NSString *debugString;
+    if (pitchEstimator.loudness < -90)
+    {
+        debugString = [NSString
+                       stringWithFormat:@"Note: %@\n"
+                                         "Frequency: %@\n"
+                                         "Estimator diff: %@\n"
+                                         "Loudness: %.0f\n"
+                                         "Bin size: %.2f",
+                       @"--",
+                       @"--",
+                       @"--",
+                       pitchEstimator.loudness,
+                       pitchEstimator.binSize];
+    }
+    else
+    {
+        debugString = [NSString
+                       stringWithFormat:@"Note: %@\n"
+                                         "Frequency: %.2f\n"
+                                         "Estimator diff: %.1f\n"
+                                         "Loudness: %.0f\n"
+                                         "Bin size: %.2f",
+                       noteName,
+                       fundamentalFrequency,
+                       fabsf(fundamentalFrequency - [fft frequencyAtIndex:fundamentalFrequencyIndex]),
+                       pitchEstimator.loudness,
+                       pitchEstimator.binSize];
+    }
     
     __weak typeof (self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        weakSelf.maxFrequencyLabel.text = [NSString stringWithFormat:@"Highest Note: %@\nFrequency: %.2f\nEstimator diff: %.1f\nLoudness: %.0f\nBin size: %.0f", noteName, maxFrequency, fabsf(maxFrequency - [fft maxFrequency]), pitchEstimator.loudness, pitchEstimator.binSize];
+        weakSelf.maxFrequencyLabel.text = debugString;
         
         if (audioPlotType == AudioPlotTypeFFT) {
-            [weakSelf.audioPlot updateBuffer:fftData withBufferSize:(UInt32)bufferSize/10];
+            UInt32 scaledBufferSize = (UInt32)(bufferSize/(fftAudioPlotScale*beingPinchedScale));
+            weakSelf.fftHighFrequencyLabel.text = [NSString stringWithFormat:@"%.1f hz", [fft frequencyAtIndex:scaledBufferSize]];
+            [weakSelf.audioPlot updateBuffer:fftData withBufferSize:scaledBufferSize];
         }
     });
 }

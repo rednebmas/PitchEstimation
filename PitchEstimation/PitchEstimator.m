@@ -10,9 +10,13 @@
 #import "PitchEstimator.h"
 
 @interface PitchEstimator()
+{
+    float previousFundamentalFrequency;
+}
 
 @property (nonatomic, readwrite) float loudness;
 @property (nonatomic, readwrite) float fundamentalFrequency;
+@property (nonatomic, readwrite) vDSP_Length fundamentalFrequencyIndex;
 @property (nonatomic, readwrite) float binSize;
 
 @end
@@ -30,16 +34,11 @@
 
 - (void) processFFT:(EZAudioFFTRolling*)fft withFFTData:(float*)fftData ofSize:(vDSP_Length)size
 {
-    // make the fft taller
-    for (int i = 0; i < size; i++)
-    {
-//        fftData[i] *= 10.0;
-    }
-    
     // estimate actual frequency from bin with max freq
+    self.fundamentalFrequencyIndex = [self findFundamentalIndex:fft withBufferSize:size];
     self.fundamentalFrequency = [PitchEstimator ratioEstimatedFrequencyOf:fft
                                                                    ofSize:size
-                                                                  atIndex:[fft maxFrequencyIndex]];
+                                                                  atIndex:self.fundamentalFrequencyIndex];
     // set df
     self.binSize = [fft frequencyAtIndex:1] - [fft frequencyAtIndex:0];
 }
@@ -67,6 +66,54 @@
     float estimated = (adjusted_ratio) * (df * .5) + [fft frequencyAtIndex:index];
     
     return estimated;
+}
+
+- (int) findFundamentalIndex:(EZAudioFFTRolling*)fft withBufferSize:(vDSP_Length)bufferSize
+{
+    // Find the top 3 indicies with the highest magnitude
+    // { highest, lower, lowest }
+    float highestFrequencyMagnitudes[3] = { 0 };
+    int highestFrequencyIndicies[3] = { 0 };
+    for (int i = 0; i < bufferSize; i++)
+    {
+        float magnitude = [fft frequencyMagnitudeAtIndex:i];
+        
+        if (magnitude > highestFrequencyMagnitudes[2])
+        {
+            if (magnitude > highestFrequencyMagnitudes[1])
+            {
+                if (magnitude > highestFrequencyMagnitudes[0])
+                {
+                    highestFrequencyIndicies[0] = i;
+                    highestFrequencyMagnitudes[0] = magnitude;
+                }
+                else
+                {
+                    highestFrequencyIndicies[1] = i;
+                    highestFrequencyMagnitudes[1] = magnitude;
+                }
+            }
+            else
+            {
+                highestFrequencyIndicies[2] = i;
+                highestFrequencyMagnitudes[2] = magnitude;
+            }
+        }
+    }
+    
+    float fundamentalIndex = highestFrequencyIndicies[0];
+    if ([fft frequencyAtIndex:highestFrequencyIndicies[1]] == previousFundamentalFrequency)
+    {
+        fundamentalIndex = highestFrequencyIndicies[1];
+    }
+    else if ([fft frequencyAtIndex:highestFrequencyIndicies[2]] == previousFundamentalFrequency)
+    {
+        fundamentalIndex = highestFrequencyIndicies[2];
+    }
+    
+    previousFundamentalFrequency = [fft frequencyAtIndex:fundamentalIndex];
+    
+    return fundamentalIndex;
 }
 
 #pragma mark - Audio
