@@ -10,6 +10,17 @@
 
 @implementation SBMath
 
+/*
+ * http://stackoverflow.com/questions/19472747/convert-linear-scale-to-logarithmic
+ */
++ (float) convertValue:(float)value inRangeToNormalLogarithmicValue:(FloatRange)range
+{
+    float k = 1/(log(range.end)-log(range.start));
+    float c = -k * log(range.start);
+    float result = k * log(value) + c;
+    return result;
+}
+
 + (float) standardDeviationOf:(float*)values ofSize:(UInt32)size
 {
     float mean = [SBMath meanOf:values ofSize:size];

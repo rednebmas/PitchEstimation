@@ -29,8 +29,8 @@
     self = [super init];
     if (self)
     {
-        self.binInterpolationMethod = PitchEstimatorBinInterpolationMethodQuadratic;
-        self.windowingMethod = PitchEstimatorWindowingMethodHanning;
+        self.binInterpolationMethod = PitchEstimatorBinInterpolationMethodGaussian;
+        self.windowingMethod = PitchEstimatorWindowingMethodBlackmanHarris;
     }
     return self;
 }

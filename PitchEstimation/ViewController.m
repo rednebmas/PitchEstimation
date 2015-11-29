@@ -8,11 +8,13 @@
 
 #import "ViewController.h"
 #import "PitchEstimator.h"
+#import "SBMath.h"
 
 typedef NS_ENUM(NSInteger, AudioPlotType) {
     AudioPlotTypeFFT,
     AudioPlotTypeTimeNoFillBuffer,
-    AudioPlotTypeTimeFillRolling
+    AudioPlotTypeTimeFillRolling,
+    AudioPlotTypeTimePitchRolling
 };
 
 @interface ViewController ()
@@ -21,6 +23,7 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
     AudioPlotType audioPlotType;
     float fftAudioPlotScale;
     CGFloat beingPinchedScale;
+    FloatRange pitchPlotRange;
 }
 
 /**
@@ -36,6 +39,7 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
 @end
 
 static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
+static float const MIN_VOLUME = -80;
 static float const FFTGain = 40.0;
 
 @implementation ViewController
@@ -55,6 +59,9 @@ static float const FFTGain = 40.0;
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(switchPlotType)];
     [self.audioPlot addGestureRecognizer:singleFingerTap];
+    
+    pitchPlotRange.start = 100;
+    pitchPlotRange.end = 750;
     
     //
     // Setup the AVAudioSession. EZMicrophone will not work properly on iOS
@@ -145,6 +152,16 @@ static float const FFTGain = 40.0;
         
         audioPlotType = AudioPlotTypeTimeFillRolling;
     }
+    else if (audioPlotType == AudioPlotTypeTimeFillRolling)
+    {
+        self.audioPlot.shouldFill = NO;
+        self.audioPlot.plotType = EZPlotTypeRolling;
+        self.audioPlot.shouldCenterYAxis = NO;
+        self.audioPlot.shouldMirror = NO;
+        self.audioPlot.gain = 1.0;
+        
+        audioPlotType = AudioPlotTypeTimePitchRolling;
+    }
     else // switch to fft
     {
         self.audioPlot.shouldFill = YES;
@@ -231,7 +248,7 @@ static float const FFTGain = 40.0;
                                                         includeOctave:YES];
     // create debug string
     NSString *debugString;
-    if (pitchEstimator.loudness < -90)
+    if (pitchEstimator.loudness < MIN_VOLUME)
     {
         debugString = [NSString
                        stringWithFormat:@"Note: %@\n"
@@ -263,7 +280,22 @@ static float const FFTGain = 40.0;
         if (audioPlotType == AudioPlotTypeFFT) {
             UInt32 scaledBufferSize = (UInt32)(bufferSize/(fftAudioPlotScale*beingPinchedScale));
             weakSelf.fftHighFrequencyLabel.text = [NSString stringWithFormat:@"%.1f Hz", [fft frequencyAtIndex:scaledBufferSize]];
+            
             [weakSelf.audioPlot updateBuffer:fftData withBufferSize:scaledBufferSize];
+        }
+        else if (audioPlotType == AudioPlotTypeTimePitchRolling)
+        {
+            
+            if (pitchEstimator.loudness > MIN_VOLUME
+                && pitchEstimator.fundamentalFrequency > pitchPlotRange.start
+                && pitchEstimator.fundamentalFrequency < pitchPlotRange.end)
+            {
+                float value = [SBMath convertValue:pitchEstimator.fundamentalFrequency
+                   inRangeToNormalLogarithmicValue:pitchPlotRange];
+                
+                float fltArr[] = { value };
+                [weakSelf.audioPlot updateBuffer:fltArr withBufferSize:1];
+            }
         }
     });
 }
