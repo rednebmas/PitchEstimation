@@ -25,6 +25,7 @@
 
 #import "EZAudioFFT.h"
 #import "EZAudioUtilities.h"
+#import "EZAudioWindowFunctions.h"
 
 //------------------------------------------------------------------------------
 #pragma mark - Data Structures
@@ -42,11 +43,19 @@ typedef struct EZAudioFFTInfo
     float          maxFrequency;
 } EZAudioFFTInfo;
 
+typedef struct EZAudioWindowFunctionInfo
+{
+    BOOL initialized;
+    UInt32 size;
+    float *window;
+} EZAudioWindowFunctionInfo;
+
 //------------------------------------------------------------------------------
 #pragma mark - EZAudioFFT (Interface Extension)
 //------------------------------------------------------------------------------
 
 @interface EZAudioFFT ()
+@property (assign,    nonatomic) EZAudioWindowFunctionInfo *windowFunctionInfo;
 @property (assign,    nonatomic) EZAudioFFTInfo *info;
 @property (readwrite, nonatomic) vDSP_Length     maximumBufferSize;
 @end
@@ -68,6 +77,7 @@ typedef struct EZAudioFFTInfo
     free(self.info->complexA.imagp);
     free(self.info->outFFTData);
     free(self.info->inversedFFTData);
+    free(self.windowFunctionInfo->window);
 }
 
 //------------------------------------------------------------------------------
@@ -143,6 +153,8 @@ typedef struct EZAudioFFTInfo
     self.info->outFFTData = (float *)malloc(maximumSizePerComponentBytes);
     memset(self.info->outFFTData, 0, maximumSizePerComponentBytes);
     self.info->inversedFFTData = (float *)malloc(maximumSizePerComponentBytes);
+    
+    self.windowFunctionInfo = (EZAudioWindowFunctionInfo*)calloc(1, sizeof(EZAudioWindowFunctionInfo));
 }
 
 //------------------------------------------------------------------------------
@@ -157,12 +169,36 @@ typedef struct EZAudioFFTInfo
     }
     
     //
+    // Apply gaussian window to buffer
+    // Because this could be acting on a circular buffer, we want to make make a copy
+    //
+    float* windowedBuffer = buffer;
+    if (self.shouldApplyGaussianWindow)
+    {
+        if (!self.windowFunctionInfo->initialized || self.windowFunctionInfo->size != bufferSize)
+        {
+            float* window = malloc(bufferSize * sizeof(float));
+            [EZAudioWindowFunctions gaussianWindow:window length:bufferSize];
+            
+            self.windowFunctionInfo->initialized = YES;
+            self.windowFunctionInfo->size = bufferSize;
+            self.windowFunctionInfo->window = window;
+        }
+        
+        windowedBuffer = malloc(bufferSize * sizeof(float));
+        for (int i = 0; i < bufferSize; i++)
+        {
+            windowedBuffer[i] = buffer[i] * self.windowFunctionInfo->window[i];
+        }
+    }
+    
+    //
     // Calculate real + imaginary components and normalize
     //
     vDSP_Length log2n = log2f(bufferSize);
     long nOver2 = bufferSize / 2;
     float mFFTNormFactor = 10.0 / (2 * bufferSize);
-    vDSP_ctoz((COMPLEX*)buffer, 2, &(self.info->complexA), 1, nOver2);
+    vDSP_ctoz((COMPLEX*)windowedBuffer, 2, &(self.info->complexA), 1, nOver2);
     vDSP_fft_zrip(self.info->fftSetup, &(self.info->complexA), 1, log2n, FFT_FORWARD);
     vDSP_vsmul(self.info->complexA.realp, 1, &mFFTNormFactor, self.info->complexA.realp, 1, nOver2);
     vDSP_vsmul(self.info->complexA.imagp, 1, &mFFTNormFactor, self.info->complexA.imagp, 1, nOver2);
@@ -268,6 +304,22 @@ typedef struct EZAudioFFTInfo
 - (float)maxFrequency
 {
     return self.info->maxFrequency;
+}
+
+//------------------------------------------------------------------------------
+#pragma mark - Misc
+//------------------------------------------------------------------------------
+
+- (void) applyGaussianWindow:(float*)buffer withBufferSize:(UInt32)bufferSize
+{
+    if (!self.windowFunctionInfo->initialized) {
+        float* window = malloc(bufferSize * sizeof(float));
+        [EZAudioWindowFunctions gaussianWindow:window length:bufferSize];
+        
+        self.windowFunctionInfo->initialized = YES;
+        self.windowFunctionInfo->size = bufferSize;
+        self.windowFunctionInfo->window = window;
+    }
 }
 
 @end

@@ -201,6 +201,11 @@
  */
 @property (readwrite, nonatomic) float sampleRate;
 
+/**
+ If YES, a gaussian window will be applied before peforming the FFT.
+ */
+@property (readwrite, nonatomic) BOOL shouldApplyGaussianWindow;
+
 //------------------------------------------------------------------------------
 #pragma mark - Actions
 //------------------------------------------------------------------------------

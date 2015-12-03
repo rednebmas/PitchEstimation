@@ -1,2 +1,2 @@
 use_frameworks!
-pod 'EZAudio', '~> 1.1.2' 
+pod 'EZAudio', :git => 'https://github.com/rednebmas/EZAudio.git'

@@ -17,7 +17,7 @@
 		2295C2A51C07ABE600A88A7C /* SBMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 2295C2A41C07ABE600A88A7C /* SBMath.m */; };
 		229D2CF51C0EEC880076AC7A /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229D2CF41C0EEC880076AC7A /* Note.swift */; };
 		229D2CF81C0EECA10076AC7A /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D2CF71C0EECA10076AC7A /* AudioPlayer.m */; };
-		D55C342457E658926111B8CF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 277EE69778CCF1885D3131C2 /* libPods.a */; };
+		FDB63558DD4670A6A6A6A2C8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B667B32A5DD3584ECCF1ABE /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,7 +40,7 @@
 		229D2CF41C0EEC880076AC7A /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		229D2CF61C0EECA10076AC7A /* AudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayer.h; sourceTree = "<group>"; };
 		229D2CF71C0EECA10076AC7A /* AudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayer.m; sourceTree = "<group>"; };
-		277EE69778CCF1885D3131C2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B667B32A5DD3584ECCF1ABE /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3B0D987E63960EE51C666C7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -49,7 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D55C342457E658926111B8CF /* libPods.a in Frameworks */,
+				FDB63558DD4670A6A6A6A2C8 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,7 +118,7 @@
 		E9D1901640C414A037F43CFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				277EE69778CCF1885D3131C2 /* libPods.a */,
+				5B667B32A5DD3584ECCF1ABE /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
