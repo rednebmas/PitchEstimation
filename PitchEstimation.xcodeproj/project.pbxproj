@@ -15,6 +15,8 @@
 		2294E0AE1BF2E60A0028A673 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2294E0AC1BF2E60A0028A673 /* LaunchScreen.storyboard */; };
 		2294E0B71BF2EA530028A673 /* PitchEstimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2294E0B61BF2EA530028A673 /* PitchEstimator.m */; };
 		2295C2A51C07ABE600A88A7C /* SBMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 2295C2A41C07ABE600A88A7C /* SBMath.m */; };
+		229D2CF51C0EEC880076AC7A /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229D2CF41C0EEC880076AC7A /* Note.swift */; };
+		229D2CF81C0EECA10076AC7A /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D2CF71C0EECA10076AC7A /* AudioPlayer.m */; };
 		D55C342457E658926111B8CF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 277EE69778CCF1885D3131C2 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +36,10 @@
 		2294E0B61BF2EA530028A673 /* PitchEstimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PitchEstimator.m; sourceTree = "<group>"; };
 		2295C2A31C07ABE600A88A7C /* SBMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBMath.h; sourceTree = "<group>"; };
 		2295C2A41C07ABE600A88A7C /* SBMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBMath.m; sourceTree = "<group>"; };
+		229D2CF31C0EEC870076AC7A /* PitchEstimation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PitchEstimation-Bridging-Header.h"; sourceTree = "<group>"; };
+		229D2CF41C0EEC880076AC7A /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		229D2CF61C0EECA10076AC7A /* AudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayer.h; sourceTree = "<group>"; };
+		229D2CF71C0EECA10076AC7A /* AudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayer.m; sourceTree = "<group>"; };
 		277EE69778CCF1885D3131C2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3B0D987E63960EE51C666C7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -71,12 +77,15 @@
 		2294E09D1BF2E60A0028A673 /* PitchEstimation */ = {
 			isa = PBXGroup;
 			children = (
+				229D2CF61C0EECA10076AC7A /* AudioPlayer.h */,
+				229D2CF71C0EECA10076AC7A /* AudioPlayer.m */,
 				2294E0A11BF2E60A0028A673 /* AppDelegate.h */,
 				2294E0A21BF2E60A0028A673 /* AppDelegate.m */,
 				2294E0A41BF2E60A0028A673 /* ViewController.h */,
 				2294E0A51BF2E60A0028A673 /* ViewController.m */,
 				2294E0B51BF2EA530028A673 /* PitchEstimator.h */,
 				2294E0B61BF2EA530028A673 /* PitchEstimator.m */,
+				229D2CF41C0EEC880076AC7A /* Note.swift */,
 				2294E0A71BF2E60A0028A673 /* Main.storyboard */,
 				2294E0AA1BF2E60A0028A673 /* Assets.xcassets */,
 				2294E0AC1BF2E60A0028A673 /* LaunchScreen.storyboard */,
@@ -84,6 +93,7 @@
 				2294E09E1BF2E60A0028A673 /* Supporting Files */,
 				2295C2A31C07ABE600A88A7C /* SBMath.h */,
 				2295C2A41C07ABE600A88A7C /* SBMath.m */,
+				229D2CF31C0EEC870076AC7A /* PitchEstimation-Bridging-Header.h */,
 			);
 			path = PitchEstimation;
 			sourceTree = "<group>";
@@ -236,9 +246,11 @@
 			files = (
 				2294E0A61BF2E60A0028A673 /* ViewController.m in Sources */,
 				2294E0A31BF2E60A0028A673 /* AppDelegate.m in Sources */,
+				229D2CF81C0EECA10076AC7A /* AudioPlayer.m in Sources */,
 				2294E0A01BF2E60A0028A673 /* main.m in Sources */,
 				2294E0B71BF2EA530028A673 /* PitchEstimator.m in Sources */,
 				2295C2A51C07ABE600A88A7C /* SBMath.m in Sources */,
+				229D2CF51C0EEC880076AC7A /* Note.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,10 +363,13 @@
 			baseConfigurationReference = C3B0D987E63960EE51C666C7 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = PitchEstimation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sambender.PitchEstimation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PitchEstimation/PitchEstimation-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -363,10 +378,12 @@
 			baseConfigurationReference = 1FA32C142B0307736501B36E /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = PitchEstimation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sambender.PitchEstimation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PitchEstimation/PitchEstimation-Bridging-Header.h";
 			};
 			name = Release;
 		};

@@ -21,12 +21,15 @@ typedef NS_ENUM(NSInteger, PitchEstimatorBinInterpolationMethod) {
     PitchEstimatorBinInterpolationMethodNone
 };
 
+@class Note;
+
 @interface PitchEstimator : NSObject
 
 @property (nonatomic) PitchEstimatorBinInterpolationMethod binInterpolationMethod;
 @property (nonatomic) PitchEstimatorWindowingMethod windowingMethod;
 @property (nonatomic, readonly) float loudness;
 @property (nonatomic, readonly) float fundamentalFrequency;
+@property (nonatomic, retain) Note *note;
 @property (nonatomic, readonly) vDSP_Length fundamentalFrequencyIndex;
 // delta frequency between bins
 @property (nonatomic, readonly) float binSize;

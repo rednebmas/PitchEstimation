@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "PitchEstimator.h"
 #import "SBMath.h"
+#import "PitchEstimation-Swift.h"
 
 typedef NS_ENUM(NSInteger, AudioPlotType) {
     AudioPlotTypeFFT,
@@ -22,6 +23,7 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
     PitchEstimator *pitchEstimator;
     AudioPlotType audioPlotType;
     float fftAudioPlotScale;
+    float tempF;
     CGFloat beingPinchedScale;
     FloatRange pitchPlotRange;
 }
@@ -39,7 +41,7 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
 @end
 
 static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
-static float const MIN_VOLUME = -80;
+static float const MIN_VOLUME = -90;
 static float const FFTGain = 40.0;
 
 @implementation ViewController
@@ -119,6 +121,9 @@ static float const FFTGain = 40.0;
     beingPinchedScale = 1.0;
     UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinched:)];
     [self.audioPlot addGestureRecognizer:pinchGestureRecognizer];
+    
+    tempF = 440.0;
+//    [self testError];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -200,6 +205,32 @@ static float const FFTGain = 40.0;
     pitchEstimator.binInterpolationMethod = sender.selectedSegmentIndex;
 }
 
+#pragma mark - Error Testing
+
+- (void) testError
+{
+    [self playNoteAtFreqForOneSecond:tempF];
+    tempF += 0.3;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, .9 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self testError];
+    });
+}
+
+- (void) playNoteAtFreqForOneSecond:(float)f
+{
+    Note *note = [[Note alloc] initWithFrequency:f];
+    [note play];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, .9 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self stopNote:note];
+    });
+}
+
+- (void) stopNote:(Note*)note {
+    printf("%f,%f\n", note.frequency, pitchEstimator.fundamentalFrequency);
+    [note stop];
+}
+
 //------------------------------------------------------------------------------
 #pragma mark - EZMicrophoneDelegate
 //------------------------------------------------------------------------------
@@ -243,6 +274,12 @@ static float const FFTGain = 40.0;
     [pitchEstimator processFFT:fft withFFTData:fftData ofSize:bufferSize];
     
     float fundamentalFrequency = pitchEstimator.fundamentalFrequency;
+    
+    float mod = fmod(fundamentalFrequency - 457.55, 5.3702);
+    
+    // printf("%f\n", (.88 * sin((mod + 1.9) * 1.17)));
+    fundamentalFrequency -= sin((mod + 3) * (2*M_PI/5.38330078));
+    
     vDSP_Length fundamentalFrequencyIndex = pitchEstimator.fundamentalFrequencyIndex;
     NSString *noteName = [EZAudioUtilities noteNameStringForFrequency:fundamentalFrequency
                                                         includeOctave:YES];
