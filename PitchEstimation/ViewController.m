@@ -40,8 +40,8 @@ typedef NS_ENUM(NSInteger, AudioPlotType) {
 
 @end
 
-static vDSP_Length const FFTViewControllerFFTWindowSize = 4096 * 2;
-static float const MIN_VOLUME = -90;
+static vDSP_Length const FFTViewControllerFFTWindowSize = 4096;
+static float const MIN_VOLUME = -85;
 static float const FFTGain = 40.0;
 
 @implementation ViewController
@@ -108,6 +108,7 @@ static float const FFTGain = 40.0;
     self.fft = [EZAudioFFTRolling fftWithWindowSize:FFTViewControllerFFTWindowSize
                                          sampleRate:self.microphone.audioStreamBasicDescription.mSampleRate
                                            delegate:self];
+    self.fft.shouldApplyGaussianWindow = YES;
     
     //
     // Start the mic
@@ -123,7 +124,7 @@ static float const FFTGain = 40.0;
     [self.audioPlot addGestureRecognizer:pinchGestureRecognizer];
     
     tempF = 440.0;
-//    [self testError];
+    // [self testError];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -197,6 +198,7 @@ static float const FFTGain = 40.0;
 
 - (IBAction)windowValueChanged:(UISegmentedControl*)sender
 {
+    self.fft.shouldApplyGaussianWindow = sender.selectedSegmentIndex == 0 ? YES : NO;
     pitchEstimator.windowingMethod = sender.selectedSegmentIndex;
 }
 
@@ -274,15 +276,14 @@ static float const FFTGain = 40.0;
     [pitchEstimator processFFT:fft withFFTData:fftData ofSize:bufferSize];
     
     float fundamentalFrequency = pitchEstimator.fundamentalFrequency;
+    Note *note = [[Note alloc] initWithFrequency:fundamentalFrequency];
     
-    float mod = fmod(fundamentalFrequency - 457.55, 5.3702);
+    FloatRange range;
+    range.start = -100;
+    range.end = -15;
+    float loudnessProgressValue =   fabsf([SBMath convertValue:pitchEstimator.loudness
+                                               inRangeToNormal:range]);
     
-    // printf("%f\n", (.88 * sin((mod + 1.9) * 1.17)));
-    fundamentalFrequency -= sin((mod + 3) * (2*M_PI/5.38330078));
-    
-    vDSP_Length fundamentalFrequencyIndex = pitchEstimator.fundamentalFrequencyIndex;
-    NSString *noteName = [EZAudioUtilities noteNameStringForFrequency:fundamentalFrequency
-                                                        includeOctave:YES];
     // create debug string
     NSString *debugString;
     if (pitchEstimator.loudness < MIN_VOLUME)
@@ -290,29 +291,26 @@ static float const FFTGain = 40.0;
         debugString = [NSString
                        stringWithFormat:@"Note: %@\n"
                                          "Frequency: %@\n"
-                                         "Estimator diff: %@\n"
-                                         "Loudness: %.0f",
+                                         "Loudness: ",
                        @"--",
-                       @"--",
-                       @"--",
-                       pitchEstimator.loudness];
+                       @"--"];
     }
     else
     {
         debugString = [NSString
-                       stringWithFormat:@"Note: %@\n"
-                                         "Frequency: %.2f\n"
-                                         "Estimator diff: %.1f\n"
-                                         "Loudness: %.0f",
-                       noteName,
-                       fundamentalFrequency,
-                       fabsf(fundamentalFrequency - [fft frequencyAtIndex:fundamentalFrequencyIndex]),
-                       pitchEstimator.loudness];
+                       stringWithFormat:@"Note: %@ (%@%.1fc)\n"
+                                         "Frequency: %.2f Hz\n"
+                                         "Loudness:",
+                       note.nameWithOctave,
+                       note.differenceInCentsToTrueNote > 0 ? @"+" : @"",
+                       note.differenceInCentsToTrueNote,
+                       fundamentalFrequency];
     }
     
     __weak typeof (self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         weakSelf.maxFrequencyLabel.text = debugString;
+        self.loudnessProgressBar.progress = loudnessProgressValue;
         
         if (audioPlotType == AudioPlotTypeFFT) {
             UInt32 scaledBufferSize = (UInt32)(bufferSize/(fftAudioPlotScale*beingPinchedScale));

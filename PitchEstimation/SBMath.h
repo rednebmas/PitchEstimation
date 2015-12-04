@@ -17,6 +17,7 @@ typedef struct FloatRange {
 
 + (float) meanOf:(float*)values ofSize:(UInt32)size;
 + (float) standardDeviationOf:(float*)values ofSize:(UInt32)size;
++ (float) convertValue:(float)value inRangeToNormal:(FloatRange)range;
 + (float) convertValue:(float)value inRangeToNormalLogarithmicValue:(FloatRange)range;
 
 @end

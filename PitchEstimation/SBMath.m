@@ -21,6 +21,13 @@
     return result;
 }
 
++ (float) convertValue:(float)value inRangeToNormal:(FloatRange)range
+{
+    float valueRange = range.end - range.start;
+    float result = (range.start - value) / valueRange;
+    return result;
+}
+
 + (float) standardDeviationOf:(float*)values ofSize:(UInt32)size
 {
     float mean = [SBMath meanOf:values ofSize:size];

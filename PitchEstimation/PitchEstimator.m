@@ -40,35 +40,14 @@
 - (void) processAudioBuffer:(float**)buffer ofSize:(UInt32)size
 {
     self.loudness = [PitchEstimator loudness:buffer ofSize:size];
-    
-    if (self.windowingMethod == PitchEstimatorWindowingMethodHanning)
-    {
-        [PitchEstimator hann:buffer length:size];
-    }
-    else if (self.windowingMethod == PitchEstimatorWindowingMethodBlackmanHarris)
-    {
-        [PitchEstimator blackmanHarris:buffer length:size];
-    }
-    else if (self.windowingMethod == PitchEstimatorWindowingMethodGaussian)
-    {
-        [PitchEstimator gaussianWindow:buffer length:size];
-    }
 }
-
 
 - (void) processFFT:(EZAudioFFTRolling*)fft withFFTData:(float*)fftData ofSize:(vDSP_Length)size
 {
     // estimate actual frequency from bin with max freq
     self.fundamentalFrequencyIndex = [self findFundamentalIndex:fft withBufferSize:size];
     
-    if (self.binInterpolationMethod == PitchEstimatorBinInterpolationMethodQuadratic)
-    {
-        self.fundamentalFrequency = [PitchEstimator
-                                     quadraticEstimatedFrequencyOf:fft
-                                     ofSize:size
-                                     atIndex:self.fundamentalFrequencyIndex];
-    }
-    else if (self.binInterpolationMethod == PitchEstimatorBinInterpolationMethodGaussian)
+    if (self.binInterpolationMethod == PitchEstimatorBinInterpolationMethodGaussian)
     {
         self.fundamentalFrequency = [PitchEstimator
                                      gaussianEstimatedFrequencyOf:fft
@@ -85,54 +64,6 @@
 }
 
 #pragma mark - FFT
-
-/**
- * Something I came up with from playing with matlab... Doesn't work paticularly well
- */
-+ (float) ratioEstimatedFrequencyOf:(EZAudioFFT*)fft ofSize:(vDSP_Length)size atIndex:(vDSP_Length)index
-{
-    vDSP_Length neighborIndex;
-    if ([fft frequencyMagnitudeAtIndex:index-1] > [fft frequencyMagnitudeAtIndex:index+1])
-    {
-        neighborIndex = index - 1;
-    }
-    else
-    {
-        neighborIndex = index + 1;
-    }
-    
-    float df = [fft frequencyAtIndex:neighborIndex] - [fft frequencyAtIndex:index];
-    float ratio = [fft frequencyMagnitudeAtIndex:neighborIndex] / [fft frequencyMagnitudeAtIndex:index];
-    
-    // ratio will be .5 if the peak is exactly on bin
-    // ratio will be 1.0 if peak is in between bins
-    float adjusted_ratio = (ratio - .5) * 2;
-    float estimated = (adjusted_ratio) * (df * .5) + [fft frequencyAtIndex:index];
-    
-    return estimated;
-}
-
-/**
- * More information can be found:
- * https://ccrma.stanford.edu/~jos/sasp/Quadratic_Interpolation_Spectral_Peaks.html
- */
-+ (float) quadraticEstimatedFrequencyOf:(EZAudioFFT*)fft ofSize:(vDSP_Length)size atIndex:(vDSP_Length)index
-{
-    if (index == 0)
-        return [fft frequencyAtIndex:0];
-    
-    float alpha = logf([fft frequencyMagnitudeAtIndex:index-1]);
-    float beta = logf([fft frequencyMagnitudeAtIndex:index]);
-    float gamma = logf([fft frequencyMagnitudeAtIndex:index+1]);
-    
-    // shoud be between -.5 and .5
-    float binDifference = .5 * ((alpha - gamma) / (alpha - 2 * beta + gamma));
-    
-    float binSize = [fft frequencyAtIndex:1] - [fft frequencyAtIndex:0];
-    float estimated = [fft frequencyAtIndex:index] + binSize * binDifference;
-    
-    return estimated;
-}
 
 /**
  * More information can be found:
@@ -227,6 +158,7 @@
 /**
  * Hanning window function which improves results of FFT
  */
+/*
 + (void) hann:(float**)buffer length:(UInt32)length
 {
     float factor = 0;
@@ -257,44 +189,6 @@
         buffer[0][intI] = buffer[0][intI] * factor;
     }
 }
-
-+ (void) gaussianWindow:(float**)buffer length:(UInt32)length
-{
-//    float stdDeviation = [SBMath standardDeviationOf:buffer[0] ofSize:length];
-//    float stdDeviationSquared = stdDeviation * stdDeviation;
-    
-    /*
-     * Method 1
-     *
-     
-    float factor;
-    float n;
-    float lengthOverTwo = length / 2;
-    float lengthMinusOneOverTwo = (length - 1) / 2;
-    float toSquare;
-    for (float i = 0; i < length; i++)
-    {
-        n = i - lengthOverTwo;
-        toSquare = 6 * n / lengthMinusOneOverTwo;
-        factor = powf(M_E, -.5 * toSquare * toSquare);
-        
-        int intI = (int)i;
-        buffer[0][intI] = buffer[0][intI] * factor;
-    }
-     */
-    
-    float factor;
-    float n;
-    float sigma = (length - 1) / (2 * 3);
-    float lengthOverTwo = length / 2;
-    for (float i = 0; i < length; i++)
-    {
-        n = i - lengthOverTwo;
-        factor = powf(M_E, (- (n * n)) / (2 * sigma * sigma));
-        
-        int intI = (int)i;
-        buffer[0][intI] = buffer[0][intI] * factor;
-    }
-}
+*/
 
 @end

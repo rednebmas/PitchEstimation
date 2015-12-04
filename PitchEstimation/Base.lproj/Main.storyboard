@@ -21,10 +21,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2fq-Tp-uX6" customClass="EZAudioPlot">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Frequency" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vJA-zR-xRr">
-                                        <rect key="frame" x="12" y="28" width="576" height="26.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vJA-zR-xRr">
+                                        <rect key="frame" x="12" y="28" width="576" height="79"/>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <string key="text">Note: A4 (+0.0c)
+Frequency: 440 Hz
+Loudness:</string>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="22"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -36,12 +39,10 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="gz5-4t-gXf">
-                                        <rect key="frame" x="12" y="93" width="283" height="29"/>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gz5-4t-gXf">
+                                        <rect key="frame" x="12" y="145" width="141" height="29"/>
                                         <animations/>
                                         <segments>
-                                            <segment title="Hanning"/>
-                                            <segment title="BHN"/>
                                             <segment title="Gaussian"/>
                                             <segment title="None"/>
                                         </segments>
@@ -51,21 +52,21 @@
                                         </connections>
                                     </segmentedControl>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Window function" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Olt-AH-yOL">
-                                        <rect key="frame" x="12" y="67" width="115.5" height="18"/>
+                                        <rect key="frame" x="12" y="119" width="115.5" height="18"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bin Interpolation method" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Vm-ga-cCr">
-                                        <rect key="frame" x="12" y="129" width="169" height="18"/>
+                                        <rect key="frame" x="12" y="181" width="169" height="18"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="4ux-lB-HTo">
-                                        <rect key="frame" x="12" y="155" width="224" height="29"/>
+                                        <rect key="frame" x="12" y="207" width="224" height="29"/>
                                         <animations/>
                                         <segments>
                                             <segment title="Quadratic"/>
@@ -77,20 +78,29 @@
                                             <action selector="binInterpolationMethodChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="T5z-OV-NRd"/>
                                         </connections>
                                     </segmentedControl>
+                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.90000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="6b5-vi-y9u">
+                                        <rect key="frame" x="124" y="95" width="461" height="2"/>
+                                        <animations/>
+                                        <color key="progressTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="trackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </progressView>
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" red="0.81176470590000005" green="0.25882352939999997" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="6b5-vi-y9u" firstAttribute="top" secondItem="2fq-Tp-uX6" secondAttribute="top" constant="95" id="3Bf-HM-NOl"/>
                                     <constraint firstAttribute="trailing" secondItem="vJA-zR-xRr" secondAttribute="trailing" constant="12" id="4Kb-XY-ZCD"/>
                                     <constraint firstItem="4ux-lB-HTo" firstAttribute="top" secondItem="9Vm-ga-cCr" secondAttribute="bottom" constant="8" id="BOQ-KI-xjZ"/>
                                     <constraint firstItem="4ux-lB-HTo" firstAttribute="top" secondItem="gz5-4t-gXf" secondAttribute="bottom" constant="8" id="E22-eF-hi1"/>
                                     <constraint firstItem="vJA-zR-xRr" firstAttribute="top" secondItem="2fq-Tp-uX6" secondAttribute="topMargin" constant="16" id="K3a-vG-o5w"/>
+                                    <constraint firstItem="6b5-vi-y9u" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="124" id="L8d-Ss-nbB"/>
                                     <constraint firstItem="gz5-4t-gXf" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="LQl-N5-4AI"/>
                                     <constraint firstItem="9Vm-ga-cCr" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="O6g-96-roo"/>
                                     <constraint firstItem="gz5-4t-gXf" firstAttribute="top" secondItem="vJA-zR-xRr" secondAttribute="bottom" constant="12.5" id="QZh-td-Ndd"/>
                                     <constraint firstItem="Olt-AH-yOL" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="Qps-pJ-mpx"/>
                                     <constraint firstItem="vJA-zR-xRr" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="Zmh-gO-GWt"/>
                                     <constraint firstAttribute="bottom" secondItem="EZp-gS-g9G" secondAttribute="bottom" constant="8" id="c0Q-zw-Z0f"/>
+                                    <constraint firstAttribute="trailing" secondItem="6b5-vi-y9u" secondAttribute="trailing" constant="15" id="dwr-Q4-meE"/>
                                     <constraint firstItem="4ux-lB-HTo" firstAttribute="leading" secondItem="2fq-Tp-uX6" secondAttribute="leading" constant="12" id="iRL-Fy-kfn"/>
                                     <constraint firstItem="9Vm-ga-cCr" firstAttribute="top" secondItem="gz5-4t-gXf" secondAttribute="bottom" constant="8" id="lmR-v7-RjG"/>
                                     <constraint firstAttribute="trailing" secondItem="EZp-gS-g9G" secondAttribute="trailing" constant="12" id="mSl-wS-v56"/>
@@ -129,6 +139,7 @@
                     <connections>
                         <outlet property="audioPlot" destination="2fq-Tp-uX6" id="YXV-AS-Ona"/>
                         <outlet property="fftHighFrequencyLabel" destination="EZp-gS-g9G" id="3OB-fW-cFh"/>
+                        <outlet property="loudnessProgressBar" destination="6b5-vi-y9u" id="HE2-uq-djv"/>
                         <outlet property="maxFrequencyLabel" destination="vJA-zR-xRr" id="6S4-VF-3gI"/>
                     </connections>
                 </viewController>
